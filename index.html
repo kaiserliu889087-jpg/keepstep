@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>留步 KeepStep — 互動原型 | 創新設計期末 · 劉騏銘</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F6F2E7;
+  --ink:#23381F;
+  --green:#2E4A30;
+  --green-mid:#5E7D5C;
+  --green-soft:#AECBB0;
+  --green-pale:#DCE8DA;
+  --gold:#B98F2F;
+  --gold-soft:#E4D3A6;
+  --red:#C45B4B;
+  --white:#FDFCF8;
+  --mono:'Space Mono',monospace;
+  --serif:'Noto Serif TC',serif;
+  --sans:'Noto Sans TC',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.7;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+
+/* ===== header ===== */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 48px;border-bottom:1px solid rgba(46,74,48,.18);position:sticky;top:0;background:rgba(246,242,231,.92);backdrop-filter:blur(8px);z-index:50}
+.topbar .brand{font-family:var(--mono);font-size:13px;letter-spacing:.35em;color:var(--green)}
+.topbar nav{display:flex;gap:28px}
+.topbar nav a{font-size:13px;text-decoration:none;color:var(--green-mid);letter-spacing:.12em;transition:color .2s}
+.topbar nav a:hover{color:var(--gold)}
+
+/* ===== hero ===== */
+.hero{position:relative;padding:96px 48px 72px;max-width:1200px;margin:0 auto}
+.hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.4em;color:var(--gold);margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(44px,6.5vw,84px);line-height:1.18;letter-spacing:.02em}
+.hero h1 em{font-style:normal;color:var(--gold);position:relative}
+.hero .sub{margin-top:28px;max-width:640px;font-size:16.5px;color:#465c43;font-weight:300}
+.hero .sub strong{color:var(--green);font-weight:700}
+.hero .meta{margin-top:40px;display:flex;gap:36px;font-family:var(--mono);font-size:12px;color:var(--green-mid)}
+.hero .meta span b{color:var(--green);display:block;font-size:14px}
+.hero .leaf{position:absolute;right:6%;top:60px;width:200px;opacity:.5;animation:float 7s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+.reveal{opacity:0;transform:translateY(24px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}.d4{animation-delay:.46s}
+
+/* ===== statement strip ===== */
+.strip{background:var(--green);color:var(--green-pale);padding:30px 48px;font-family:var(--serif);font-size:clamp(16px,2vw,21px);text-align:center;letter-spacing:.06em}
+.strip em{color:var(--gold-soft);font-style:normal}
+
+/* ===== prototype section ===== */
+.proto{max-width:1240px;margin:0 auto;padding:90px 48px;display:grid;grid-template-columns:430px 1fr;gap:72px;align-items:start}
+.section-label{font-family:var(--mono);font-size:12px;letter-spacing:.4em;color:var(--gold);margin-bottom:14px}
+h2.sec{font-family:var(--serif);font-weight:700;font-size:34px;margin-bottom:10px}
+
+/* phone */
+.phone-wrap{position:sticky;top:110px}
+.phone{width:375px;height:730px;margin:0 auto;background:#0F1A10;border-radius:46px;padding:14px;box-shadow:0 40px 80px -30px rgba(35,56,31,.45),0 0 0 1px rgba(35,56,31,.2)}
+.screen{position:relative;width:100%;height:100%;background:var(--white);border-radius:34px;overflow:hidden;display:flex;flex-direction:column}
+.notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:26px;background:#0F1A10;border-radius:14px;z-index:30}
+.statusbar{display:flex;justify-content:space-between;padding:14px 24px 6px;font-family:var(--mono);font-size:11px;color:var(--green);z-index:10}
+.app-body{flex:1;overflow-y:auto;scrollbar-width:none;position:relative}
+.app-body::-webkit-scrollbar{display:none}
+.tabbar{display:flex;border-top:1px solid var(--green-pale);background:var(--white)}
+.tabbar button{flex:1;padding:12px 0 18px;background:none;border:none;cursor:pointer;font-family:var(--sans);font-size:10.5px;color:#9AAE98;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color .2s}
+.tabbar button .ic{font-size:18px;line-height:1}
+.tabbar button.active{color:var(--green);font-weight:700}
+.tabbar button.active .ic{transform:translateY(-2px)}
+
+.view{display:none;padding:8px 22px 28px;animation:viewin .35s ease}
+.view.show{display:block}
+@keyframes viewin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* — view: home — */
+.greet{font-family:var(--serif);font-size:21px;font-weight:700;margin:8px 0 2px}
+.greet-sub{font-size:11.5px;color:#8a9a87;font-family:var(--mono)}
+.walk-ring{position:relative;width:190px;height:190px;margin:22px auto 8px}
+.walk-ring svg{transform:rotate(-90deg)}
+.walk-ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.walk-ring .num b{font-family:var(--mono);font-size:30px;color:var(--green)}
+.walk-ring .num span{font-size:10.5px;color:#8a9a87;letter-spacing:.2em}
+.flowers{display:flex;justify-content:center;gap:10px;margin:14px 0 4px}
+.flower{font-size:26px;cursor:pointer;transition:transform .3s,filter .6s,opacity .6s;position:relative}
+.flower:hover{transform:scale(1.25) rotate(8deg)}
+.flower.wilt{filter:grayscale(1);opacity:.28;transform:scale(.85) rotate(-12deg)}
+.flower .ttl{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;font-family:var(--mono);color:var(--gold);opacity:0;transition:opacity .2s;pointer-events:none}
+.flower:hover .ttl{opacity:1}
+.expire-note{text-align:center;font-size:10.5px;color:#a08436;background:#F4EAD0;border-radius:10px;padding:8px 12px;margin:20px 0 12px;font-family:var(--mono)}
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hcard{background:var(--green-pale);border-radius:14px;padding:13px 14px}
+.hcard b{font-family:var(--mono);font-size:17px;color:var(--green);display:block}
+.hcard span{font-size:10.5px;color:#6d7f6a}
+
+/* — view: ledger — */
+.ledger-head{margin:10px 0 4px;font-family:var(--serif);font-size:19px;font-weight:700}
+.ledger-sub{font-size:11px;color:#8a9a87;margin-bottom:14px}
+.ledger-item{display:flex;align-items:flex-start;gap:12px;padding:13px 4px;border-bottom:1px dashed var(--green-pale)}
+.ledger-item .dot{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.li-g .dot{background:var(--green-pale)}
+.li-y .dot{background:#F4EAD0}
+.li-r .dot{background:#F2DCD7}
+.ledger-item h4{font-size:13px;font-weight:700}
+.ledger-item p{font-size:11px;color:#7d8c7a;line-height:1.55}
+.ledger-item .to{font-family:var(--mono);font-size:10px;margin-top:3px}
+.li-g .to{color:var(--green-mid)}
+.li-y .to{color:var(--gold)}
+.li-r .to{color:var(--red)}
+.ledger-total{margin-top:14px;background:var(--green);color:var(--green-pale);border-radius:14px;padding:14px 16px;font-size:12px}
+.ledger-total b{font-family:var(--mono);color:var(--gold-soft)}
+
+/* — view: switch — */
+.mode{border:1.5px solid var(--green-pale);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all .25s;position:relative}
+.mode h4{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:8px}
+.mode p{font-size:11px;color:#7d8c7a;margin-top:5px;line-height:1.6}
+.mode .radio{position:absolute;right:16px;top:16px;width:18px;height:18px;border-radius:50%;border:2px solid var(--green-soft);transition:all .2s}
+.mode.on{border-color:var(--green);background:var(--green-pale)}
+.mode.on .radio{border-color:var(--green);background:radial-gradient(circle,var(--green) 0 45%,transparent 50%)}
+.mode.quiet.on{border-color:var(--ink);background:#1d2b1a;color:var(--green-pale)}
+.mode.quiet.on p{color:#9eb49a}
+.mode.quiet.on .radio{border-color:var(--gold-soft);background:radial-gradient(circle,var(--gold-soft) 0 45%,transparent 50%)}
+.switch-state{text-align:center;font-family:var(--mono);font-size:11px;padding:10px;border-radius:10px;margin-top:6px;transition:all .3s}
+.st-share{background:var(--green-pale);color:var(--green)}
+.st-blur{background:#F4EAD0;color:var(--gold)}
+.st-quiet{background:#1d2b1a;color:var(--gold-soft);letter-spacing:.3em}
+
+/* — view: trust — */
+.trust-bal{background:linear-gradient(135deg,var(--green),#1c3320);color:var(--green-pale);border-radius:18px;padding:18px;margin:10px 0 14px}
+.trust-bal b{font-family:var(--mono);font-size:26px;color:#fff;display:block}
+.trust-bal span{font-size:10.5px;opacity:.75}
+.vote{border:1.5px solid var(--green-pale);border-radius:14px;padding:14px;margin-bottom:11px}
+.vote h4{font-size:13px;font-weight:700}
+.vote .bar{height:8px;background:var(--green-pale);border-radius:6px;margin:9px 0 5px;overflow:hidden}
+.vote .bar i{display:block;height:100%;background:var(--gold);border-radius:6px;transition:width 1s ease}
+.vote .nums{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:#8a9a87}
+.votebtn{width:100%;padding:9px;margin-top:9px;border:1.5px solid var(--green);background:none;border-radius:9px;font-family:var(--sans);font-size:12px;color:var(--green);cursor:pointer;transition:all .2s;font-weight:700}
+.votebtn:hover{background:var(--green);color:#fff}
+.votebtn.done{background:var(--green);color:#fff;cursor:default}
+
+/* ===== feature rail ===== */
+.rail .intro{font-size:15px;color:#465c43;font-weight:300;margin-bottom:38px;max-width:520px}
+.feature{border-left:3px solid var(--green-pale);padding:6px 0 6px 24px;margin-bottom:34px;cursor:pointer;transition:border-color .25s}
+.feature:hover,.feature.lit{border-color:var(--gold)}
+.feature .no{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.25em}
+.feature h3{font-family:var(--serif);font-size:21px;font-weight:700;margin:4px 0 6px}
+.feature p{font-size:13.5px;color:#5b6e58;max-width:520px}
+.feature .answers{margin-top:8px;font-family:var(--mono);font-size:10.5px;color:#9aae98}
+.feature .answers b{color:var(--red);font-weight:400}
+.try{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11px;color:var(--green);border:1px solid var(--green-soft);padding:4px 12px;border-radius:20px;transition:all .2s}
+.feature:hover .try{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ===== futures mapping ===== */
+.map3{background:var(--ink);color:var(--green-pale);padding:90px 48px}
+.map3 .inner{max-width:1100px;margin:0 auto}
+.map3 h2{font-family:var(--serif);color:#fff;font-size:32px;margin-bottom:8px}
+.map3 .lead{font-size:14px;color:#9eb49a;max-width:620px;margin-bottom:48px}
+.map-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(174,203,176,.18)}
+.mcell{background:var(--ink);padding:30px 26px}
+.mcell .yr{font-family:var(--mono);font-size:24px;color:var(--gold-soft)}
+.mcell .prob{font-size:13px;color:#cfdccd;margin:12px 0;min-height:66px}
+.mcell .arrow{font-family:var(--mono);color:var(--gold);font-size:11px;letter-spacing:.2em;margin:10px 0}
+.mcell .sol{font-size:13px;color:#fff;background:rgba(185,143,47,.14);border-left:2px solid var(--gold);padding:10px 14px}
+
+/* footer */
+footer{padding:60px 48px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--green-mid);letter-spacing:.3em}
+
+@media(max-width:1020px){
+  .proto{grid-template-columns:1fr;gap:48px}
+  .phone-wrap{position:static}
+  .map-grid{grid-template-columns:1fr}
+  .topbar{padding:18px 22px}
+  .hero,.proto,.map3{padding-left:22px;padding-right:22px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">KEEPSTEP · 留步</div>
+  <nav>
+    <a href="#proto">互動原型</a>
+    <a href="#map3">回應三個未來</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <svg class="leaf" viewBox="0 0 100 100"><path d="M50 8 C20 30 14 62 48 92 C82 62 78 30 50 8 Z M50 20 L50 84" fill="none" stroke="#5E7D5C" stroke-width="2.5"/></svg>
+  <div class="kicker reveal d1">INNOVATION DESIGN · FINAL / 劉騏銘</div>
+  <h1 class="reveal d2">留步<br>把足跡的<em>主權</em>，<br>還給走路的人</h1>
+  <p class="sub reveal d3">延續期中「如果城市會記得你走過的路」的三個未來推演——當步行數據從<strong>被無感採集（2031）</strong>、走向<strong>被 KPI 化（2036）</strong>、再到<strong>「不被記錄」成為奢侈（2041）</strong>，KeepStep 是對「現在」的最佳化提案：一個讓行人看得見、管得住、收得回自己足跡數據的步行 × AR 系統。</p>
+  <div class="meta reveal d4">
+    <span><b>形式</b>APP / 互動原型</span>
+    <span><b>對象</b>城市步行者・社區</span>
+    <span><b>方法</b>STEEP → 情境推演 → 最佳化</span>
+  </div>
+</section>
+
+<div class="strip">「當每一步路都會留下花，<em>誰來決定什麼算是花</em>？」—— KeepStep 的回答：走路的人自己決定。</div>
+
+<section class="proto" id="proto">
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen">
+        <div class="notch"></div>
+        <div class="statusbar"><span>09:41</span><span>KEEPSTEP</span><span>●●●</span></div>
+        <div class="app-body">
+
+          <!-- HOME -->
+          <div class="view show" id="v-home">
+            <div class="greet">早安，騏銘</div>
+            <div class="greet-sub">2026.06.11 THU · 萬華</div>
+            <div class="walk-ring">
+              <svg width="190" height="190">
+                <circle cx="95" cy="95" r="82" fill="none" stroke="#DCE8DA" stroke-width="12"/>
+                <circle cx="95" cy="95" r="82" fill="none" stroke="#2E4A30" stroke-width="12" stroke-linecap="round" stroke-dasharray="515" stroke-dashoffset="170" id="ring"/>
+              </svg>
+              <div class="num"><b>6,742</b><span>STEPS</span></div>
+            </div>
+            <div class="flowers" id="flowers">
+              <span class="flower" data-d="3">🌸<i class="ttl">3 天後凋謝</i></span>
+              <span class="flower" data-d="7">🌼<i class="ttl">7 天後凋謝</i></span>
+              <span class="flower" data-d="1">🌺<i class="ttl">明天凋謝</i></span>
+              <span class="flower wilt" data-d="0">🥀<i class="ttl">已凋謝・數據已刪除</i></span>
+              <span class="flower" data-d="14">🌻<i class="ttl">14 天後凋謝</i></span>
+            </div>
+            <div class="expire-note">⏳ 花會凋謝＝數據會過期刪除（預設 14 天）<br>點花朵試試看</div>
+            <div class="home-cards">
+              <div class="hcard"><b>3 筆</b><span>今日數據流向 →「足跡帳本」</span></div>
+              <div class="hcard"><b>模糊</b><span>目前分享模式 →「數據開關」</span></div>
+            </div>
+          </div>
+
+          <!-- LEDGER -->
+          <div class="view" id="v-ledger">
+            <div class="ledger-head">足跡帳本</div>
+            <div class="ledger-sub">今天，你的腳步去了哪裡——數據也是。</div>
+            <div class="ledger-item li-g">
+              <div class="dot">🏘</div>
+              <div><h4>步行熱區統計（去識別化）</h4>
+                <p>你 07:42–08:10 的路段被計入社區步行舒適度地圖。</p>
+                <div class="to">→ 龍山里數據信託 ・ 換得：信託點數 +12</div></div>
+            </div>
+            <div class="ledger-item li-y">
+              <div class="dot">🌸</div>
+              <div><h4>AR 種花紀錄</h4>
+                <p>沿康定路種下 4 朵花，座標保留 14 天後自動刪除。</p>
+                <div class="to">→ 僅存於本機 ・ 不出設備</div></div>
+            </div>
+            <div class="ledger-item li-r">
+              <div class="dot">🛍</div>
+              <div><h4>商家合作請求：便利商店人流分析</h4>
+                <p>要求你的到訪頻率資料。你目前的模式：未授權。</p>
+                <div class="to">→ 已拒絕 ・ 點此查看對方願付對價：NT$2.4/月</div></div>
+            </div>
+            <div class="ledger-total">本月你的足跡為社區換得 <b>340 點</b> 信託點數，<br>為自己保留了 <b>87%</b> 的原始數據不出本機。</div>
+          </div>
+
+          <!-- SWITCH -->
+          <div class="view" id="v-switch">
+            <div class="ledger-head">數據開關</div>
+            <div class="ledger-sub">三段式分享——隨時可換，功能不打折。</div>
+            <div class="mode" data-m="share">
+              <h4>🤝 完整分享</h4><div class="radio"></div>
+              <p>足跡進入社區信託，參與步行治理與公共決策，換取最高信託點數。</p>
+            </div>
+            <div class="mode on" data-m="blur">
+              <h4>🌫 模糊分享（預設）</h4><div class="radio"></div>
+              <p>只輸出去識別化的熱區統計，個人路徑永遠不離開手機。</p>
+            </div>
+            <div class="mode quiet" data-m="quiet">
+              <h4>🤫 靜步模式</h4><div class="radio"></div>
+              <p>一鍵完全不被記錄。地圖、種花照常使用——「不被測量」不該是奢侈品。</p>
+            </div>
+            <div class="switch-state st-blur" id="swstate">目前狀態：模糊分享 — 只有熱區，沒有你</div>
+          </div>
+
+          <!-- TRUST -->
+          <div class="view" id="v-trust">
+            <div class="ledger-head">社區數據信託</div>
+            <div class="ledger-sub">龍山里 · 1,204 位成員 · 數據不賣，只投票。</div>
+            <div class="trust-bal"><span>本里信託數據池（僅統計值）</span><b>12,847 人・月</b><span>任何用途變更需 2/3 成員同意，伺服器設於本地。</span></div>
+            <div class="vote">
+              <h4>提案 #18：步行數據用於「康定路口增設行人庇護島」評估</h4>
+              <div class="bar"><i style="width:74%" id="vbar"></i></div>
+              <div class="nums"><span id="vnum">同意 74%</span><span>剩 2 天</span></div>
+              <button class="votebtn" id="votebtn">投下同意票</button>
+            </div>
+            <div class="vote">
+              <h4>提案 #19：跨國平台收購本里數據授權案</h4>
+              <div class="bar"><i style="width:9%;background:#C45B4B"></i></div>
+              <div class="nums"><span>同意 9%</span><span>即將否決</span></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="tabbar">
+          <button class="active" data-v="home"><span class="ic">🚶</span>步行</button>
+          <button data-v="ledger"><span class="ic">📒</span>足跡帳本</button>
+          <button data-v="switch"><span class="ic">🎚</span>數據開關</button>
+          <button data-v="trust"><span class="ic">🏛</span>社區信託</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rail">
+    <div class="section-label">PROTOTYPE · 四個核心機制</div>
+    <h2 class="sec">最佳化了什麼？</h2>
+    <p class="intro">針對皮克敏 Bloom 式「無感採集 → 集中上雲 → 永久保存」的既有機制，KeepStep 重新設計了數據的「可見性・所有權・壽命」。點左側手機可實際操作。</p>
+
+    <div class="feature" data-v="ledger">
+      <div class="no">01 / TRANSPARENCY</div>
+      <h3>足跡帳本</h3>
+      <p>每一筆被收集的數據都記帳：收了什麼、給了誰、換到什麼。把 2031 年「用戶尚未察覺自己是供應端」的黑箱，翻成一本人人看得懂的帳。</p>
+      <div class="answers">回應 → <b>2031「我以為我只是在通勤」</b></div>
+      <span class="try">▶ 在原型中查看</span>
+    </div>
+
+    <div class="feature" data-v="switch">
+      <div class="no">02 / SOVEREIGNTY</div>
+      <h3>三段數據開關</h3>
+      <p>完整分享／模糊分享／靜步模式。關鍵原則：<b>關掉分享，功能不降級</b>——隱私不該用體驗來懲罰，「不被記錄」不該等到 2041 才變成需要保護區的人權。</p>
+      <div class="answers">回應 → <b>2041「不被記錄成為奢侈」</b></div>
+      <span class="try">▶ 在原型中切換</span>
+    </div>
+
+    <div class="feature" data-v="trust">
+      <div class="no">03 / GOVERNANCE</div>
+      <h3>社區數據信託</h3>
+      <p>步行數據不進企業伺服器，存入在地信託；用途由社區投票，重大變更需 2/3 同意。直接阻斷 2036 情境裡「後台被主權基金併購」的資本收編路徑。</p>
+      <div class="answers">回應 → <b>2036「健康變成 KPI、數據被併購」</b></div>
+      <span class="try">▶ 在原型中投票</span>
+    </div>
+
+    <div class="feature" data-v="home">
+      <div class="no">04 / FORGETTING</div>
+      <h3>會凋謝的花</h3>
+      <p>保留種花的遊戲化魅力，但每朵花都有壽命——花凋謝＝該筆足跡數據到期自動刪除。把「遺忘」做成系統預設值，而不是用戶要去申請的權利。</p>
+      <div class="answers">回應 → <b>三個未來共同的前提：「數據永遠被留著」</b></div>
+      <span class="try">▶ 點原型裡的花</span>
+    </div>
+  </div>
+</section>
+
+<section class="map3" id="map3">
+  <div class="inner">
+    <div class="section-label">WHY NOW · 設計依據</div>
+    <h2>一個設計，回應三個未來</h2>
+    <p class="lead">期中推演的三個情境不是預言，而是風險清單。KeepStep 的每個機制，都是對其中一條風險的提前拆解。</p>
+    <div class="map-grid">
+      <div class="mcell">
+        <div class="yr">2031</div>
+        <div class="prob">「察覺它」——穿戴普及、AR 成為背景音，腳步在無感中變成別人的數據資產。</div>
+        <div class="arrow">↓ KEEPSTEP 介入</div>
+        <div class="sol">足跡帳本：讓採集從「無感」變「可見」，每筆數據都有去向與對價。</div>
+      </div>
+      <div class="mcell">
+        <div class="yr">2036</div>
+        <div class="prob">「依賴它」——步行被 KPI 化，社區數據與杜拜、孟買一起被併進主權基金的資料中心。</div>
+        <div class="arrow">↓ KEEPSTEP 介入</div>
+        <div class="sol">社區數據信託：數據在地存儲、社區共治，資本買不走一條街的腳印。</div>
+      </div>
+      <div class="mcell">
+        <div class="yr">2041</div>
+        <div class="prob">「學著拒絕它」——「不被記錄」成為奢侈品，需要劃設保護區才能安靜走路。</div>
+        <div class="arrow">↓ KEEPSTEP 介入</div>
+        <div class="sol">靜步模式＋會凋謝的花：把「不被測量」與「被遺忘」做成預設功能，而非例外。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>KEEPSTEP 留步 — INNOVATION DESIGN FINAL · 劉騏銘 · 2026</footer>
+
+<script>
+// tab switching
+const tabs=document.querySelectorAll('.tabbar button');
+const views={home:'v-home',ledger:'v-ledger',switch:'v-switch',trust:'v-trust'};
+function show(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('show'));
+  document.getElementById(views[v]).classList.add('show');
+  tabs.forEach(b=>b.classList.toggle('active',b.dataset.v===v));
+}
+tabs.forEach(b=>b.addEventListener('click',()=>show(b.dataset.v)));
+
+// feature rail -> jump phone view
+document.querySelectorAll('.feature').forEach(f=>{
+  f.addEventListener('click',()=>{
+    show(f.dataset.v);
+    document.querySelectorAll('.feature').forEach(x=>x.classList.remove('lit'));
+    f.classList.add('lit');
+    if(window.innerWidth>1020) window.scrollTo({top:document.getElementById('proto').offsetTop-40,behavior:'smooth'});
+  });
+});
+
+// flowers wilt toggle
+document.querySelectorAll('.flower').forEach(fl=>{
+  fl.addEventListener('click',()=>fl.classList.toggle('wilt'));
+});
+
+// data switch modes
+const modes=document.querySelectorAll('.mode');
+const state=document.getElementById('swstate');
+const stateMap={
+  share:['st-share','目前狀態：完整分享 — 足跡進入社區信託'],
+  blur:['st-blur','目前狀態：模糊分享 — 只有熱區，沒有你'],
+  quiet:['st-quiet','— NO DATA · OFFLINE MODE —']
+};
+modes.forEach(m=>m.addEventListener('click',()=>{
+  modes.forEach(x=>x.classList.remove('on'));
+  m.classList.add('on');
+  const[cls,txt]=stateMap[m.dataset.m];
+  state.className='switch-state '+cls;
+  state.textContent=txt;
+}));
+
+// vote
+const vb=document.getElementById('votebtn');
+vb.addEventListener('click',()=>{
+  if(vb.classList.contains('done'))return;
+  vb.classList.add('done');vb.textContent='✓ 已投票（同意 75%）';
+  document.getElementById('vbar').style.width='75%';
+  document.getElementById('vnum').textContent='同意 75%';
+});
+</script>
+</body>
+</html>
