@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>系統圖｜小過去 · 現在 · 小未來 — 留步 KeepStep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0C110D;
+  --panel:#111812;
+  --line:rgba(190,210,190,.14);
+  --txt:#D8E2D6;
+  --dim:#7C8E7A;
+  --green:#7FB58A;
+  --gold:#D2AC54;
+  --red:#D07A66;
+  --mono:'Space Mono',monospace;
+  --serif:'Noto Serif TC',serif;
+  --sans:'Noto Sans TC',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);overflow-x:auto}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:99;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(ellipse 60% 50% at 50% 38%,rgba(127,181,138,.07),transparent 70%);}
+
+.canvas{min-width:1480px;max-width:1720px;margin:0 auto;padding:64px 56px 80px;position:relative;z-index:2}
+
+/* header */
+.head{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:28px;margin-bottom:20px}
+.head .l .k{font-family:var(--mono);font-size:11px;letter-spacing:.45em;color:var(--gold);margin-bottom:14px}
+.head h1{font-family:var(--serif);font-weight:900;font-size:40px;color:#fff;letter-spacing:.03em;line-height:1.25}
+.head h1 small{display:block;font-size:15px;font-weight:400;color:var(--dim);margin-top:8px;letter-spacing:.1em}
+.legend{font-family:var(--mono);font-size:10.5px;color:var(--dim);text-align:right;line-height:2.1}
+.legend i{display:inline-block;width:26px;height:0;border-top:1.5px solid;margin-right:8px;vertical-align:middle}
+.legend .lg{border-color:var(--green)}
+.legend .lr{border-color:var(--red);border-top-style:dashed}
+
+/* three columns */
+.grid{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:90px;position:relative;margin-top:36px}
+svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.col{position:relative;z-index:2}
+.col-h{margin-bottom:26px}
+.col-h .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.4em;margin-bottom:8px}
+.col-h h2{font-family:var(--serif);font-size:24px;font-weight:700;color:#fff}
+.col-h p{font-size:11.5px;color:var(--dim);margin-top:6px;line-height:1.7}
+.c-past .tag{color:var(--green)}
+.c-now .tag{color:var(--gold)}
+.c-fut .tag{color:var(--red)}
+
+/* past cards */
+.pcard{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px 16px 13px;margin-bottom:14px;transition:border-color .25s,transform .25s}
+.pcard:hover{border-color:rgba(127,181,138,.5);transform:translateX(3px)}
+.pcard .yr{font-family:var(--mono);font-size:11px;color:var(--green)}
+.pcard h3{font-size:13.5px;font-weight:700;color:#EAF1E8;margin:3px 0 4px}
+.pcard p{font-size:11px;color:var(--dim);line-height:1.65}
+
+/* now */
+.now-box{border:1px solid rgba(210,172,84,.45);background:linear-gradient(160deg,#161D14,#10150e);border-radius:16px;padding:6px;box-shadow:0 0 60px -18px rgba(210,172,84,.25)}
+.now-inner{border:1px solid rgba(210,172,84,.25);border-radius:12px;padding:26px 26px 20px}
+.now-inner .k{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--gold)}
+.now-inner h3{font-family:var(--serif);font-size:30px;font-weight:900;color:#fff;margin:10px 0 4px}
+.now-inner h3 span{color:var(--gold)}
+.now-inner .what{font-size:12px;color:#B9C8B6;line-height:1.75;margin:10px 0 18px}
+.mech{border-top:1px dashed rgba(210,172,84,.25);padding:13px 2px 12px;display:flex;gap:13px;align-items:flex-start}
+.mech .no{font-family:var(--mono);font-size:11px;color:var(--gold);padding-top:2px}
+.mech h4{font-size:14px;font-weight:700;color:#F2EBD8}
+.mech p{font-size:11px;color:var(--dim);line-height:1.65;margin-top:3px}
+.now-foot{margin-top:6px;text-align:center;font-family:var(--mono);font-size:10px;color:rgba(210,172,84,.7);letter-spacing:.25em;padding:12px 0 6px;border-top:1px solid rgba(210,172,84,.2)}
+
+/* future cards */
+.fcard{position:relative;border:1px solid var(--line);border-left:2.5px solid var(--red);background:var(--panel);border-radius:10px;padding:14px 16px 13px;margin-bottom:14px;transition:border-color .25s,transform .25s}
+.fcard:hover{border-color:rgba(208,122,102,.55);transform:translateX(-3px)}
+.fcard .cat{font-family:var(--mono);font-size:9.5px;letter-spacing:.25em;color:var(--red)}
+.fcard h3{font-size:13.5px;font-weight:700;color:#F0E4E0;margin:3px 0 4px}
+.fcard p{font-size:11px;color:var(--dim);line-height:1.65}
+
+/* footer */
+.foot{margin-top:56px;border-top:1px solid var(--line);padding-top:22px;display:flex;justify-content:space-between;align-items:center}
+.foot .note{font-size:11.5px;color:var(--dim);max-width:760px;line-height:1.8}
+.foot .note b{color:var(--gold);font-weight:700}
+.foot .sig{font-family:var(--mono);font-size:10.5px;color:var(--dim);letter-spacing:.3em;text-align:right}
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <div class="head">
+    <div class="l">
+      <div class="k">SYSTEM MAP · 小過去 — 現在 — 小未來</div>
+      <h1>一條街的腳印，是怎麼變成資產的<small>留步 KeepStep 的系統脈絡：十年因果 × 一個最佳化 × 它將留給社會的副作用　／　創新設計期末 · 劉騏銘</small></h1>
+    </div>
+    <div class="legend">
+      <div><i class="lg"></i>因果輸入：小過去 → 現在的設計</div>
+      <div><i class="lr"></i>副作用輸出：現在的設計 → 小未來</div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid">
+    <svg class="wires" id="wires"></svg>
+
+    <!-- ===== PAST ===== -->
+    <div class="col c-past">
+      <div class="col-h">
+        <div class="tag">MICRO-PAST · 2016–2026</div>
+        <h2>小過去</h2>
+        <p>十年內，步行如何一步步變成可採集、可交易的數據。</p>
+      </div>
+      <div class="pcard" id="p1">
+        <div class="yr">2016</div><h3>Pokémon GO 全球爆發</h3>
+        <p>LBS 遊戲讓「走路」第一次被大規模遊戲化，玩家足跡成為平台資產的開端。</p>
+      </div>
+      <div class="pcard" id="p2">
+        <div class="yr">2018</div><h3>劍橋分析事件 × GDPR 上路</h3>
+        <p>個資濫用醜聞引爆全球數據意識；歐盟立法確立「被遺忘權」，但執行始終落後於採集。</p>
+      </div>
+      <div class="pcard" id="p3">
+        <div class="yr">2020</div><h3>疫情步行潮 × 15 分鐘城市</h3>
+        <p>封城後步行成為健康剛需，城市規劃轉向步行友善，「步行數據」開始具有公共價值。</p>
+      </div>
+      <div class="pcard" id="p4">
+        <div class="yr">2021</div><h3>Pikmin Bloom 上市</h3>
+        <p>「邊走邊種花」把日常通勤變成無感數據採集——本研究 STEEP 分析的原點案例。</p>
+      </div>
+      <div class="pcard" id="p5">
+        <div class="yr">2022–23</div><h3>穿戴裝置滲透過半</h3>
+        <p>手錶、戒指、耳機全面感測化，健康數據從「特地量」變成「隨時都在量」。</p>
+      </div>
+      <div class="pcard" id="p6">
+        <div class="yr">2023–24</div><h3>OSM 群眾地圖成基礎設施 × LBS 廣告商品化</h3>
+        <p>公民協作地圖被企業大量引用；地理位置廣告與實體商業深度綁定，腳印開始標價。</p>
+      </div>
+      <div class="pcard" id="p7">
+        <div class="yr">2025–26</div><h3>消費級 AR 眼鏡普及</h3>
+        <p>採集介面從手機移到身體。視線、停留、路徑——城市開始記得每個人走過的路。</p>
+      </div>
+    </div>
+
+    <!-- ===== NOW ===== -->
+    <div class="col c-now">
+      <div class="col-h">
+        <div class="tag">NOW · 2026 · OPTIMIZATION</div>
+        <h2>現在：最佳化設計</h2>
+        <p>針對「無感採集 → 集中上雲 → 永久保存」的既有機制重新設計。</p>
+      </div>
+      <div class="now-box" id="now">
+        <div class="now-inner">
+          <div class="k">THE DESIGN</div>
+          <h3>留步 <span>KeepStep</span></h3>
+          <div class="what">把足跡數據的「可見性・所有權・壽命」還給行人的步行 × AR 系統。維持遊戲化的愉悅，拆除監控式的預設。</div>
+          <div class="mech" id="m1"><div class="no">01</div><div><h4>足跡帳本</h4><p>每筆數據都記帳：收了什麼、給了誰、換到什麼。採集從無感變可見。</p></div></div>
+          <div class="mech" id="m2"><div class="no">02</div><div><h4>三段數據開關</h4><p>完整分享／模糊分享／靜步模式。關掉分享，功能不降級。</p></div></div>
+          <div class="mech" id="m3"><div class="no">03</div><div><h4>社區數據信託</h4><p>數據在地存儲、社區投票決定用途，重大變更需 2/3 同意。</p></div></div>
+          <div class="mech" id="m4"><div class="no">04</div><div><h4>會凋謝的花</h4><p>花有壽命，凋謝＝數據到期自動刪除。「遺忘」成為系統預設。</p></div></div>
+          <div class="now-foot">POSITIVE BY DESIGN — 副作用見右欄 →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FUTURE ===== -->
+    <div class="col c-fut">
+      <div class="col-h">
+        <div class="tag">MICRO-FUTURES · 副作用</div>
+        <h2>小未來</h2>
+        <p>這個設計可能讓社會付出的代價——不求解決，但必須先想清楚。</p>
+      </div>
+      <div class="fcard" id="f1">
+        <div class="cat">SOCIAL · 數位落差</div><h3>主權成為新特權</h3>
+        <p>「會設定的人」才享有隱私；長者、弱勢與數位文盲停在預設值，反而成為最透明的一群人。</p>
+      </div>
+      <div class="fcard" id="f2">
+        <div class="cat">GOVERNANCE · 數據空洞</div><h3>靜步者從地圖上消失</h3>
+        <p>靜步模式若集中於特定街區，該區步行數據缺失——公共資源依數據分配時，他們反而被遺漏。</p>
+      </div>
+      <div class="fcard" id="f3">
+        <div class="cat">PSYCHOLOGICAL · 同意疲勞</div><h3>自由變成每天的功課</h3>
+        <p>把判斷責任轉嫁給個人：天天面對開關、帳本與授權決策，疲勞之下人們又回到「全部同意」。</p>
+      </div>
+      <div class="fcard" id="f4">
+        <div class="cat">POLITICAL · 在地寡頭化</div><h3>信託變成新的權力機構</h3>
+        <p>社區信託可能被地方派系或活躍少數把持，2/3 投票成為多數暴力——資本退場，派系進場。</p>
+      </div>
+      <div class="fcard" id="f5">
+        <div class="cat">ECONOMIC · 隱私階級化</div><h3>「不分享」開始被定價</h3>
+        <p>保險、信貸與雇主把分享意願當風險指標：選擇靜步的人保費更貴，「可疑」成為拒絕的代價。</p>
+      </div>
+      <div class="fcard" id="f6">
+        <div class="cat">ENVIRONMENTAL · 工業連結</div><h3>在地伺服器的隱形汙染</h3>
+        <p>「數據在地存儲」意味著每個社區都要養邊緣運算節點——能耗、散熱與電子廢棄物下放到里巷。</p>
+      </div>
+      <div class="fcard" id="f7">
+        <div class="cat">SOCIAL · 排他性</div><h3>數據里民主義</h3>
+        <p>信託以社區為界：外來者、移工、無證者的腳步不被計入，街道的改善永遠繞過他們常走的路。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="note">本系統圖延續期中報告《如果城市會記得你走過的路》之 STEEP 推演（2031 察覺它 / 2036 依賴它 / 2041 學著拒絕它）。<b>左欄</b>為設計成立的十年因果；<b>中欄</b>為現在的最佳化提案；<b>右欄</b>為設計即使成功、社會仍須承擔的副作用——它們不是要被解決的 bug，而是要被誠實看見的成本。</div>
+    <div class="sig">INNOVATION DESIGN · FINAL<br>劉騏銘 · 2026.06</div>
+  </div>
+</div>
+
+<script>
+// draw connection wires between cards
+const links=[
+  // past -> now mechanisms (green solid)
+  ['p1','m4','g'],['p4','m4','g'],
+  ['p2','m1','g'],['p7','m1','g'],
+  ['p5','m2','g'],['p3','m2','g'],
+  ['p6','m3','g'],
+  // now mechanisms -> future (red dashed)
+  ['m1','f3','r'],
+  ['m2','f1','r'],['m2','f2','r'],['m2','f5','r'],
+  ['m3','f4','r'],['m3','f6','r'],['m3','f7','r']
+];
+function draw(){
+  const svg=document.getElementById('wires');
+  const grid=document.getElementById('grid');
+  const gr=grid.getBoundingClientRect();
+  svg.setAttribute('viewBox',`0 0 ${gr.width} ${gr.height}`);
+  svg.innerHTML='';
+  links.forEach(([a,b,c],i)=>{
+    const ea=document.getElementById(a).getBoundingClientRect();
+    const eb=document.getElementById(b).getBoundingClientRect();
+    const x1=ea.right-gr.left, y1=ea.top-gr.top+ea.height/2;
+    const x2=eb.left-gr.left,  y2=eb.top-gr.top+eb.height/2;
+    const mx=(x1+x2)/2;
+    const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke',c==='g'?'rgba(127,181,138,.5)':'rgba(208,122,102,.5)');
+    p.setAttribute('stroke-width','1.2');
+    if(c==='r')p.setAttribute('stroke-dasharray','5 4');
+    const len=p.getTotalLength?1200:1200;
+    p.style.strokeDasharray=c==='r'?'5 4':'';
+    svg.appendChild(p);
+    // endpoint dots
+    [[x1,y1],[x2,y2]].forEach(([x,y])=>{
+      const d=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      d.setAttribute('cx',x);d.setAttribute('cy',y);d.setAttribute('r','2.4');
+      d.setAttribute('fill',c==='g'?'#7FB58A':'#D07A66');
+      svg.appendChild(d);
+    });
+  });
+}
+window.addEventListener('load',draw);
+window.addEventListener('resize',draw);
+document.fonts&&document.fonts.ready.then(draw);
+</script>
+</body>
+</html>
